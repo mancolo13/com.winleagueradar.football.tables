@@ -2,25 +2,18 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../services/routing_service.dart';
 
-class Tab1Screen extends StatefulWidget {
+
+class Tab1Screen extends StatelessWidget {
   const Tab1Screen({super.key});
-
-  @override
-  State<Tab1Screen> createState() => _Tab1ScreenState();
-}
-
-class _Tab1ScreenState extends State<Tab1Screen> {
-  int _score = 92;
-  bool _active = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Win • Leagues'),
+        title: const Text('Win • PitchRadar'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.stars_rounded, color: AppTheme.primaryColor),
+            icon: const Icon(Icons.live_tv, color: AppTheme.primaryColor),
             onPressed: () => RoutingService.openRegistrationUrl(),
           ),
         ],
@@ -28,6 +21,7 @@ class _Tab1ScreenState extends State<Tab1Screen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          // Live Match Hero Banner
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -44,68 +38,72 @@ class _Tab1ScreenState extends State<Tab1Screen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Leagues Health', style: const TextStyle(fontSize: 16, color: Colors.white70)),
-                    Switch(
-                      value: _active,
-                      activeThumbColor: AppTheme.primaryColor,
-                      onChanged: (v) => setState(() => _active = v),
+                    const Text('PREMIER DIVISION • MATCHDAY 28', style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold)),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(color: Colors.redAccent, borderRadius: BorderRadius.circular(6)),
+                      child: const Text('LIVE 72\'', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                Text('$_score%', style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                LinearProgressIndicator(
-                  value: 0.92,
-                  backgroundColor: Colors.white12,
-                  color: AppTheme.primaryColor,
-                  minHeight: 8,
-                  borderRadius: BorderRadius.circular(4),
+                const SizedBox(height: 18),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _teamColumn('Arsenal FC', Icons.shield, '1'),
+                    const Text('VS', style: TextStyle(color: Colors.white54, fontSize: 14, fontWeight: FontWeight.bold)),
+                    _teamColumn('Chelsea FC', Icons.shield_outlined, '1'),
+                  ],
                 ),
+                const SizedBox(height: 16),
+                const Text('xG: 1.84 - 1.12 • Possession: 58% - 42%', style: TextStyle(color: AppTheme.secondaryColor, fontSize: 12, fontWeight: FontWeight.w600)),
               ],
             ),
           ),
           const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(child: _buildMetric('Total', '1,840', Icons.analytics)),
-              const SizedBox(width: 12),
-              Expanded(child: _buildMetric('Active', '99.2%', Icons.speed)),
-            ],
-          ),
-          const SizedBox(height: 16),
-          ...List.generate(3, (i) => Card(
-            color: AppTheme.surfaceColor,
-            margin: const EdgeInsets.only(bottom: 10),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.2),
-                child: Icon(Icons.check, color: AppTheme.primaryColor),
-              ),
-              title: Text('Leagues Priority ${i + 1}'),
-              subtitle: Text('Progress: Normal • Level ${i + 1}'),
-              trailing: const Icon(Icons.chevron_right, color: Colors.white38),
-              onTap: () => setState(() => _score = (_score + 1) % 100),
-            ),
-          )),
+          const Text('Today\'s Featured Fixtures', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          _fixtureTile('Real Madrid', 'Barcelona', '2 - 1', 'FT', true),
+          _fixtureTile('Bayern Munich', 'Dortmund', '3 - 2', 'FT', true),
+          _fixtureTile('AC Milan', 'Inter Milan', '20:45', 'Upcoming', false),
+          _fixtureTile('PSG', 'Marseille', '21:00', 'Upcoming', false),
         ],
       ),
     );
   }
 
-  Widget _buildMetric(String t, String v, IconData ic) {
+  Widget _teamColumn(String name, IconData icon, String score) {
+    return Column(
+      children: [
+        Icon(icon, size: 36, color: AppTheme.primaryColor),
+        const SizedBox(height: 6),
+        Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        const SizedBox(height: 4),
+        Text(score, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w900)),
+      ],
+    );
+  }
+
+  Widget _fixtureTile(String h, String a, String score, String status, bool finished) {
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppTheme.surfaceColor, borderRadius: BorderRadius.circular(16)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(color: AppTheme.surfaceColor, borderRadius: BorderRadius.circular(14)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(ic, color: AppTheme.secondaryColor, size: 28),
-          const SizedBox(height: 8),
-          Text(t, style: const TextStyle(color: Colors.white60, fontSize: 13)),
-          Text(v, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Expanded(child: Text('$h vs $a', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis)),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: finished ? Colors.white10 : AppTheme.primaryColor.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(score, style: TextStyle(color: finished ? Colors.white70 : AppTheme.secondaryColor, fontWeight: FontWeight.bold, fontSize: 12)),
+          ),
         ],
       ),
     );
   }
 }
+

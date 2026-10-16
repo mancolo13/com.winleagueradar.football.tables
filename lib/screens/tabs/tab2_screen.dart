@@ -1,62 +1,57 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
-import '../../services/routing_service.dart';
 
-class Tab2Screen extends StatefulWidget {
+
+class Tab2Screen extends StatelessWidget {
   const Tab2Screen({super.key});
 
   @override
-  State<Tab2Screen> createState() => _Tab2ScreenState();
-}
-
-class _Tab2ScreenState extends State<Tab2Screen> {
-  int _idx = 0;
-
-  @override
   Widget build(BuildContext context) {
+    final standings = [
+      {'pos': '1', 'team': 'Manchester City', 'p': '28', 'gd': '+44', 'pts': '67', 'ucl': true},
+      {'pos': '2', 'team': 'Liverpool FC', 'p': '28', 'gd': '+38', 'pts': '64', 'ucl': true},
+      {'pos': '3', 'team': 'Arsenal London', 'p': '28', 'gd': '+35', 'pts': '63', 'ucl': true},
+      {'pos': '4', 'team': 'Aston Villa', 'p': '28', 'gd': '+18', 'pts': '55', 'ucl': true},
+      {'pos': '5', 'team': 'Tottenham Hotspur', 'p': '27', 'gd': '+15', 'pts': '50', 'ucl': false},
+      {'pos': '6', 'team': 'Manchester United', 'p': '28', 'gd': '+2', 'pts': '47', 'ucl': false},
+      {'pos': '7', 'team': 'West Ham United', 'p': '28', 'gd': '-4', 'pts': '42', 'ucl': false},
+      {'pos': '8', 'team': 'Newcastle United', 'p': '28', 'gd': '+8', 'pts': '40', 'ucl': false},
+    ];
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Win • Tables')),
+      appBar: AppBar(title: const Text('Win • Standings Table')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _chip('All', 0),
-              _chip('Active', 1),
-              _chip('Hot', 2),
-              _chip('Saved', 3),
-            ],
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(color: AppTheme.surfaceColor, borderRadius: BorderRadius.circular(12)),
+            child: const Row(
+              children: [
+                SizedBox(width: 30, child: Text('#', style: TextStyle(color: Colors.white60, fontWeight: FontWeight.bold))),
+                Expanded(child: Text('CLUB', style: TextStyle(color: Colors.white60, fontWeight: FontWeight.bold))),
+                SizedBox(width: 32, child: Text('PL', style: TextStyle(color: Colors.white60, fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
+                SizedBox(width: 38, child: Text('GD', style: TextStyle(color: Colors.white60, fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
+                SizedBox(width: 38, child: Text('PTS', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.right)),
+              ],
+            ),
           ),
-          const SizedBox(height: 16),
-          ...List.generate(5, (i) => Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(16),
+          const SizedBox(height: 8),
+          ...standings.map((s) => Container(
+            margin: const EdgeInsets.only(bottom: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
               color: AppTheme.surfaceColor,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
+              border: Border(left: BorderSide(color: (s['ucl'] as bool) ? AppTheme.primaryColor : Colors.transparent, width: 3)),
             ),
             child: Row(
               children: [
-                CircleAvatar(
-                  backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.2),
-                  child: Text('${i + 1}', style: const TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.bold)),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Tables Record #${i + 201}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                      Text('Stage ${i + 1} • Verified status', style: const TextStyle(fontSize: 12, color: Colors.white60)),
-                    ],
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () => RoutingService.openRegistrationUrl(),
-                  style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryColor, foregroundColor: Colors.white),
-                  child: const Text('Open'),
-                ),
+                SizedBox(width: 30, child: Text(s['pos'] as String, style: const TextStyle(fontWeight: FontWeight.bold))),
+                Expanded(child: Text(s['team'] as String, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                SizedBox(width: 32, child: Text(s['p'] as String, style: const TextStyle(color: Colors.white70), textAlign: TextAlign.center)),
+                SizedBox(width: 38, child: Text(s['gd'] as String, style: const TextStyle(color: Colors.white70), textAlign: TextAlign.center)),
+                SizedBox(width: 38, child: Text(s['pts'] as String, style: const TextStyle(color: AppTheme.secondaryColor, fontWeight: FontWeight.bold, fontSize: 15), textAlign: TextAlign.right)),
               ],
             ),
           )),
@@ -64,19 +59,5 @@ class _Tab2ScreenState extends State<Tab2Screen> {
       ),
     );
   }
-
-  Widget _chip(String label, int i) {
-    final a = _idx == i;
-    return GestureDetector(
-      onTap: () => setState(() => _idx = i),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: a ? AppTheme.primaryColor : Colors.white10,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(label, style: TextStyle(color: a ? Colors.white : Colors.white70, fontWeight: FontWeight.bold, fontSize: 12)),
-      ),
-    );
-  }
 }
+

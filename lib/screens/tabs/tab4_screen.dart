@@ -2,68 +2,57 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../services/routing_service.dart';
 
+
 class Tab4Screen extends StatelessWidget {
   const Tab4Screen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Win • Favorites')),
+      appBar: AppBar(title: const Text('Win • Alerts & Settings')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(color: AppTheme.surfaceColor, borderRadius: BorderRadius.circular(20)),
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(color: AppTheme.surfaceColor, borderRadius: BorderRadius.circular(16)),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  radius: 36,
-                  backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.2),
-                  child: const Icon(Icons.person, size: 40, color: AppTheme.primaryColor),
-                ),
+                const Text('Live Match Notifications', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 const SizedBox(height: 12),
-                const Text('Account Active', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                const Text('Tier: Pro Member', style: TextStyle(color: AppTheme.secondaryColor, fontSize: 13)),
+                _switchTile('Kick-off Reminder (15m)', true),
+                const Divider(),
+                _switchTile('Goal & Red Card Instant Push', true),
+                const Divider(),
+                _switchTile('Half-time & Full-time Whistle', false),
               ],
             ),
           ),
           const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: AppTheme.surfaceColor, borderRadius: BorderRadius.circular(16)),
-            child: Column(
-              children: [
-                _tile(Icons.shield_outlined, 'Privacy Terms'),
-                const Divider(),
-                _tile(Icons.support_agent, 'Help Center'),
-                const Divider(),
-                _tile(Icons.star_rate_outlined, 'Feedback'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () => RoutingService.openRegistrationUrl(),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryColor,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            child: const Text('Upgrade Pro', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            child: const Text('Upgrade to Pro League Pass', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
           ),
         ],
       ),
     );
   }
 
-  Widget _tile(IconData ic, String t) {
-    return ListTile(
-      leading: Icon(ic, color: Colors.white70),
-      title: Text(t),
-      trailing: const Icon(Icons.chevron_right, color: Colors.white38),
-      onTap: () => RoutingService.openRegistrationUrl(),
+  Widget _switchTile(String title, bool val) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(child: Text(title, style: const TextStyle(fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis)),
+        Switch(value: val, activeThumbColor: AppTheme.primaryColor, onChanged: (v) {}),
+      ],
     );
   }
 }
+
